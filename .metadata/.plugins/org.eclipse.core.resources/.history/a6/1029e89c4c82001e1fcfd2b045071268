@@ -1,0 +1,168 @@
+package vista;
+
+import javax.swing.JPanel;
+
+
+import javax.swing.JRadioButton;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import modelo.Testigos;
+import dao.TestigosDAO;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+
+public class testigoAgregarModificar extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	private JTextField textFieldNombreCompleto;
+	private JTextField textFieldDNI;
+	private JTextField textFieldTestimonio;
+	private JLabel agregadoModificado;
+	private Testigos testigo = null; 
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private int dniOriginal;
+	/**
+	 * Create the panel.
+	 */
+	public testigoAgregarModificar() {
+		setBackground(new Color(0, 0, 28));
+		setLayout(null);
+		setBounds(0,0,600,400);
+		JLabel lblNewLabel = new JLabel("Nombre Completo");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(10, 68, 85, 14);
+		add(lblNewLabel);
+		
+		textFieldNombreCompleto = new JTextField();
+		textFieldNombreCompleto.setBounds(114, 65, 86, 20);
+		add(textFieldNombreCompleto);
+		textFieldNombreCompleto.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("DNI");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(10, 116, 46, 14);
+		add(lblNewLabel_1);
+		
+		textFieldDNI = new JTextField();
+		textFieldDNI.setBounds(114, 113, 86, 20);
+		add(textFieldDNI);
+		textFieldDNI.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Agregar Testimonio");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setBounds(233, 68, 99, 14);
+		add(lblNewLabel_2);
+		
+		textFieldTestimonio = new JTextField();
+		textFieldTestimonio.setBounds(342, 65, 86, 20);
+		add(textFieldTestimonio);
+		textFieldTestimonio.setColumns(10);
+		
+		
+		JButton bListo = new JButton("Siguiente -->");
+		bListo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(	buttonGroup.getSelection()== bListo.getModel())
+				{
+					if(esModificacion()) {
+						
+						System.out.println(esModificacion());
+						testigo.setDniTestigo(Integer.valueOf(textFieldDNI.getText()));
+						testigo.setNombreCompleto(textFieldNombreCompleto.getText());
+						testigo.setTestimonio(textFieldTestimonio.getText());
+					}else
+					System.out.println(esModificacion());
+					Testigos nuevoTestigo = new Testigos();
+					nuevoTestigo.setDniTestigo(Integer.valueOf(textFieldDNI.getText()));
+					nuevoTestigo.setNombreCompleto(textFieldNombreCompleto.getText());
+					nuevoTestigo.setTestimonio(textFieldTestimonio.getText());
+					
+					int dni = Integer.parseInt(textFieldDNI.getText());
+					String nombreCompleto = textFieldNombreCompleto.getText();
+					String testigo = textFieldTestimonio.getText();
+					
+					Testigos t = new Testigos();
+					t.setDniTestigo(dni);
+					t.setNombreCompleto(nombreCompleto);
+					t.setTestimonio(testigo);
+					
+					TestigosDAO tDAO = new TestigosDAO();
+					tDAO.agregarTestigo(t);
+					
+					agregadoModificado = new JLabel("Testigo agregado exitosamente");
+					agregadoModificado.setForeground(new Color(255, 255, 255));
+					agregadoModificado.setBounds(152, 186, 127, 14);
+							add(agregadoModificado);
+							JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent)e.getSource());
+							revalidate();
+							repaint();
+							marco.validate();
+						}
+				else {
+					
+					int dniTestigo = Integer.parseInt(textFieldDNI.getText());
+					String nombreCompleto = textFieldNombreCompleto.getText();
+					String testigo = textFieldTestimonio.getText();
+					
+					Testigos t = new Testigos();
+					t.setNombreCompleto(nombreCompleto);
+					t.setTestimonio(testigo);
+					
+					TestigosDAO tDAO = new TestigosDAO();
+					tDAO.modificarTestigo(t, dniTestigo);
+					
+					
+					agregadoModificado = new JLabel("Testigo modificado exitosamente");
+					agregadoModificado.setForeground(new Color(255, 255, 255));
+					agregadoModificado.setBounds(152, 186, 127, 14);
+					add(agregadoModificado);
+					JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent)e.getSource());
+					revalidate();
+					repaint();
+					marco.validate();
+				}
+			}
+		});
+		bListo.setBounds(329, 223, 89, 23);
+		add(bListo);
+		JButton bAtras = new JButton("<--- Atras");
+		bAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent) e.getSource());
+					marco.setContentPane( new testigoOpciones());
+					marco.validate();
+			}
+		});
+		bAtras.setBounds(27, 223, 89, 23);
+		add(bAtras);
+		
+		
+	}
+	
+	public testigoAgregarModificar(Testigos t) {
+		this();
+		testigo = t;
+		textFieldDNI.setText(String.valueOf(testigo.getDniTestigo()));
+		textFieldNombreCompleto.setText(testigo.getNombreCompleto());
+		textFieldTestimonio.setText(testigo.getTestimonio());
+		
+	}
+	
+	public boolean esModificacion()
+	{
+		if(testigo == null)
+		{
+			return false;
+		}
+		return true;
+	}
+}

@@ -1,0 +1,27 @@
+package modelo;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+
+class IdentificadoTest {
+
+	@Test
+	void test() {
+		Identificado I = new Identificado();
+		I.setFechaUltimaVezVisto(LocalDate.parse("1980-10-10"));
+		
+		CCDTyE centro = new CCDTyE();
+		centro.setFecha_fin(LocalDate.parse("1980-11-10"));
+		
+		I.añadirCentro(centro);
+		
+		
+		
+		assertEquals(I.tiempoCautiverio(), 31);
+		fail("Not yet implemented");
+	}
+
+}

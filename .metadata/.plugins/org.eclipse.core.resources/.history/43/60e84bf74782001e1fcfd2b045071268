@@ -1,0 +1,228 @@
+package vista;
+
+import dao.ProfesionesDAO;
+import dao.LugaresDeDetencionDAO;
+import javax.swing.JPanel;
+
+import javax.swing.JRadioButton;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import modelo.CCDTyE;
+import modelo.Fuerzas;
+import modelo.Identificados;
+import modelo.LugaresDeDetencion;
+import modelo.Profesiones;
+import dao.CCDTyEDAO;
+import dao.FuerzasDAO;
+import dao.IdentificadosDAO;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+
+public class identificadoAgregarModificar extends JPanel {
+	private JTextField textFieldNombre;
+	private JTextField textFieldDNI;
+	private JTextField textFieldUltimaVez;
+	private JTextField textFieldBiografia;
+	private JTextField textFieldAudiovisual;
+	private JLabel agregadoModificado;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private Identificados identificado = null;
+	private JComboBox combo1;
+	private JComboBox combo2;
+	private int DNIoriginal = 0;
+	
+
+	/**
+	 * Create the panel.
+	 */
+	public identificadoAgregarModificar() {
+		setBackground(new Color(0, 0, 28));
+		setLayout(null);
+		setBounds(0,0,600,400);
+		JLabel nombre = new JLabel("Nombre completo:");
+		nombre.setForeground(new Color(255, 255, 255));
+		nombre.setBounds(62, 67, 96, 14);
+		add(nombre);
+		
+		textFieldNombre = new JTextField();
+		textFieldNombre.setBounds(154, 64, 86, 20);
+		add(textFieldNombre);
+		textFieldNombre.setColumns(10);
+		
+		JLabel dni = new JLabel("DNI :");
+		dni.setForeground(new Color(255, 255, 255));
+		dni.setBounds(62, 118, 46, 14);
+		add(dni);
+		
+		textFieldDNI = new JTextField();
+		textFieldDNI.setBounds(154, 115, 86, 20);
+		add(textFieldDNI);
+		textFieldDNI.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("¿Cuando fue visto por ult. vez?");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(253, 67, 158, 14);
+		add(lblNewLabel);
+		
+		textFieldUltimaVez = new JTextField();
+		textFieldUltimaVez.setBounds(406, 64, 86, 20);
+		add(textFieldUltimaVez);
+		textFieldUltimaVez.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Agregar biografía");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(62, 164, 86, 14);
+		add(lblNewLabel_1);
+		
+		textFieldBiografia = new JTextField();
+		textFieldBiografia.setBounds(154, 161, 86, 20);
+		add(textFieldBiografia);
+		textFieldBiografia.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Adjuntar material audiovisual.");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setBounds(250, 118, 148, 14);
+		add(lblNewLabel_2);
+		
+		textFieldAudiovisual = new JTextField();
+		textFieldAudiovisual.setBounds(406, 115, 86, 20);
+		add(textFieldAudiovisual);
+		textFieldAudiovisual.setColumns(10);
+		
+		
+		JButton bAtras = new JButton("<--- Atras");
+		bAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource());
+				marco.setContentPane(new desaparecidoTipoAgregarModificar());
+				marco.validate();
+			}
+		});
+
+		bAtras.setBounds(42, 259, 104, 38);
+		add(bAtras);
+		
+		JButton bSiguiente = new JButton("Siguiente -->");
+		bSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				IdentificadosDAO identificadodao = new IdentificadosDAO();
+				if(esModificacion()) {
+					identificado.setNombreDetenido(textFieldNombre.getText());
+					identificado.setDniDetenido(Integer.valueOf(textFieldDNI.getText()));//(String.valueOf(identificado.getDniDetenido())));
+					ArrayList<Profesiones> profesiones = new ProfesionesDAO().traerTodos();
+					String profesionSeleccionada = combo1.getSelectedItem().toString();
+					for(Profesiones p : profesiones) {
+						if(p.getNombre().equals(profesionSeleccionada)) {
+							identificado.setProfesionDetenido(p);
+						}
+					identificado.setBiografia(textFieldBiografia.getText());
+					identificado.setFechaUltimaVezVisto(textFieldUltimaVez.getText().toString());
+					}
+					String f_ultimaVezVisto = identificado.getFechaUltimaVezVisto().toString();
+					pStmt.setString(3, f_ultimaVezVisto);
+					
+				
+			}else {
+				CCDTyE nuevoCentro = new CCDTyE();
+				//setear valores al nuevo centro
+				nuevoCentro.setNombre_centro(tNombre.getText());
+				nuevoCentro.setUbicacion(tUbicacion.getText());
+				nuevoCentro.setFecha_inicio(tFechaInicio.getText());
+				nuevoCentro.setFecha_fin(tFechafin.getText());
+				nuevoCentro .añadirFuerza(combo1.getSelectedItem().toString());
+				nuevoCentro .añadirFuerza(combo2.getSelectedItem().toString());
+				nuevoCentro .añadirFuerza(combo3.getSelectedItem().toString());
+				centroDao.agregarCentro(nuevoCentro);
+				centroModificado = new JLabel("Nuevo centro agregado exitosamente");
+				centroModificado.setForeground(new Color(255, 255, 255));
+				centroModificado.setBounds(208, 322, 138, 14);
+			}
+				
+			
+				JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent) e.getSource());
+				revalidate();
+				repaint();
+				marco.validate();
+		}
+	});
+		bSiguiente.setBounds(395, 259, 115, 38);
+		add(bSiguiente);
+		
+		JLabel lblNewLabel_3 = new JLabel("¿Cual es su profesion?");
+		lblNewLabel_3.setForeground(new Color(255, 255, 255));
+		lblNewLabel_3.setBounds(253, 164, 126, 14);
+		add(lblNewLabel_3);
+		
+		JComboBox comboUno = new JComboBox();
+		comboUno.setBounds(406, 160, 86, 22);
+		add(comboUno);
+		
+		JLabel lblNewLabel_4 = new JLabel("¿Cual fue el lugar de su secuestro?");
+		lblNewLabel_4.setForeground(new Color(255, 255, 255));
+		lblNewLabel_4.setBounds(226, 205, 202, 14);
+		add(lblNewLabel_4);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(406, 201, 88, 22);
+		add(comboBox);
+		
+	}
+	public void agregarProfesionesComboBox(JComboBox comboBox)
+	{
+		ProfesionesDAO pdao = new ProfesionesDAO();
+		ArrayList<Profesiones> profesiones = pdao.traerTodos();
+		comboBox.addItem(" ");
+		comboBox.addItem("Profesor");
+		comboBox.addItem("Escritor");
+		comboBox.addItem("Artista");
+		comboBox.addItem("Abogado");
+		comboBox.addItem("Obrero");
+		comboBox.addItem("Arquitecto");
+	}
+	
+	public void agregarLugaresComboBox(JComboBox comboBox)
+	{
+		LugaresDeDetencionDAO ldao = new LugaresDeDetencionDAO();
+		ArrayList<LugaresDeDetencion> profesiones = ldao.traerTodos();
+		comboBox.addItem(" ");
+		comboBox.addItem("Floresta");
+		comboBox.addItem("Mataderos");
+		comboBox.addItem("La boca");
+		comboBox.addItem("Nuniez");
+		comboBox.addItem("Lugano");
+		comboBox.addItem("Constitucion");
+	}
+	
+	public boolean esModificacion()
+	{
+		if(identificado == null)
+		{
+			return false;
+		}
+		return true;
+	}
+	public identificadoAgregarModificar(Identificados i) 
+	{
+		this();//trae el constructor anterior
+		identificado = i;//el entro q recibe es igual al que declaramos null
+		//se escrube lo puesto en los textfields
+		textFieldDNI.setText(String.valueOf(identificado.getDniDetenido()));
+		textFieldNombre.setText(identificado.getNombreDetenido());
+		textFieldBiografia.setText(identificado.getBiografia());
+		textFieldUltimaVez.setText(identificado.getFechaUltimaVezVisto().toString());
+		textFieldAudiovisual.setText(identificado.getMaterialAudiovisual());
+	}	
+}

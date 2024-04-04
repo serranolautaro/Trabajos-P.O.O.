@@ -1,0 +1,104 @@
+package vista;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+
+import dao.CCDTyEDAO;
+import dao.NoIdentificadosDAO;
+import modelo.CCDTyE;
+import modelo.NoIdentificados;
+public class noIdentificadoEliminarConsultar extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	private JTable tabla;
+	private JLabel eliminado;
+	private DefaultTableModel mm ;
+	/**
+	 * Create the panel.
+	 */
+	
+	public noIdentificadoEliminarConsultar() {
+		setBackground(new Color(0, 0, 28));
+		setForeground(new Color(18, 4, 36));
+		setLayout(null);
+		setBounds(0,0,600,400);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(78, 11, 278, 196);
+		add(scrollPane);
+		
+		tabla = new JTable();
+		scrollPane.setViewportView(tabla);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane.setRowHeaderView(scrollPane_1);
+		
+		mm = new DefaultTableModel();
+		
+		mm.addColumn("Apodo");
+		mm.addColumn("Descripcion");
+		
+		tabla.setModel(mm);
+		
+		datos();
+		
+		JButton bEliminarNoIdentificado = new JButton("Eliminar desaparecido");
+		bEliminarNoIdentificado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int a = tabla.getSelectedRow();
+				String apodo = (String) tabla.getModel().getValueAt(a, 1);
+				NoIdentificadosDAO nIDAO = new NoIdentificadosDAO();
+				nIDAO.eliminarNoIdentificado(apodo);
+				
+				eliminado = new JLabel("Centro eliminado exitosamente");
+				eliminado.setForeground(new Color(255, 255, 255));
+				eliminado.setBounds(262, 275, 142, 14);
+				add(eliminado);
+				JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent)e.getSource());
+				revalidate();
+				repaint();
+				marco.validate();
+			}
+		});
+		bEliminarNoIdentificado.setBounds(265, 243, 139, 23);
+		add(bEliminarNoIdentificado);
+		
+		JButton bAtras = new JButton("<--- Atras");
+		bAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource());
+				marco.setContentPane(new desaparecidoTipoConsultar());
+				marco.validate();
+			}
+		});
+		bAtras.setBounds(10, 243, 89, 23);
+		add(bAtras);
+	}
+		
+		private void datos() {
+			mm.setRowCount(0);
+			String apodo = null, descripcion = null;
+			NoIdentificadosDAO nIDAO = new NoIdentificadosDAO();
+			
+			for (NoIdentificados ni : nIDAO.traerTodos()) {
+				apodo = ni.getApodo();
+				descripcion = ni.getDescripcion();
+				mm.addRow(new Object[] {
+						apodo, descripcion
+				});
+	}
+		}
+}

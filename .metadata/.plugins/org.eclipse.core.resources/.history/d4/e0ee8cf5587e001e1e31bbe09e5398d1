@@ -1,0 +1,204 @@
+package vista;
+
+import javax.swing.JPanel;
+import java.awt.Color;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
+
+import dao.CCDTyEDAO;
+import modelo.CCDTyE;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+
+public class centroAgregarModificar extends JPanel {
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JTextField tNombre;
+	private JTextField tUbicacion;
+	private JTextField tFechaInicio;
+	private JTextField tFechafin;
+	private JLabel centroModificado;
+	/**
+	 * Create the panel.
+	 */
+	public centroAgregarModificar() {
+		setBackground(new Color(2, 0, 34));
+		setBounds(0,0,600,400);
+		setLayout(null);
+		
+		JRadioButton bradioAgregar = new JRadioButton("Agregar un centro");
+		buttonGroup.add(bradioAgregar);
+		bradioAgregar.setFont(new Font("Sitka Heading", Font.PLAIN, 14));
+		bradioAgregar.setBackground(new Color(2, 0, 34));
+		bradioAgregar.setForeground(new Color(255, 255, 255));
+		bradioAgregar.setBounds(167, 280, 138, 23);
+		add(bradioAgregar);
+		
+		JRadioButton rdModificarCentro = new JRadioButton("Modificar un centro");
+
+		buttonGroup.add(rdModificarCentro);
+		
+		rdModificarCentro.setForeground(new Color(255, 255, 255));
+		rdModificarCentro.setBackground(new Color(2, 0, 34));
+		rdModificarCentro.setBounds(371, 278, 130, 23);
+		add(rdModificarCentro);
+		
+		JButton bAtras = new JButton("<-- Atrás");
+		bAtras.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent) e.getSource());
+					marco.setContentPane( new centroOpciones());
+					marco.validate();
+			}
+		});
+		bAtras.setForeground(new Color(2, 0, 34));
+		bAtras.setBackground(new Color(255, 255, 255));
+		bAtras.setBounds(80, 332, 89, 23);
+		add(bAtras);
+		JButton bSiguiente = new JButton("Siguiente -->");
+		
+		bSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(	buttonGroup.getSelection()== bradioAgregar.getModel())
+				{
+					String nombre = tNombre.getText();
+					String ubicacion = tUbicacion.getText();
+					String fechaInicio = tFechaInicio.getText();
+					String fechaFin = tFechafin.getText();
+					
+					CCDTyE c = new CCDTyE();
+					c.setNombre_centro(nombre);
+					c.setUbicacion(ubicacion);
+					c.setFecha_inicio(fechaInicio);
+					c.setFecha_fin(fechaFin);
+					
+					CCDTyEDAO cDAO = new CCDTyEDAO();
+					cDAO.agregarCentro(c);
+					
+							centroModificado = new JLabel("Centro agregado exitosamente");
+							centroModificado.setForeground(new Color(255, 255, 255));
+							centroModificado.setBounds(208, 322, 138, 14);
+							add(centroModificado);
+							JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent)e.getSource());
+							revalidate();
+							repaint();
+							marco.validate();
+						}
+				else {
+					
+					String nombre = tNombre.getText();
+					String fechaInicio = tFechaInicio.getText();
+					String fechaFin = tFechafin.getText();
+					String ubimodificar = tUbicacion.getText();
+					
+					CCDTyE c = new CCDTyE();
+					c.setNombre_centro(nombre);
+					c.setFecha_inicio(fechaInicio);
+					c.setFecha_fin(fechaFin);
+					
+					CCDTyEDAO cDAO = new CCDTyEDAO();
+					cDAO.modificarCentro(c, ubimodificar); 
+					
+					centroModificado = new JLabel("Centro modificado exitosamente");
+					centroModificado.setForeground(new Color(255, 255, 255));
+					centroModificado.setBounds(208, 322, 138, 14);
+					add(centroModificado);
+					JFrame marco = (JFrame) SwingUtilities.getWindowAncestor((JComponent)e.getSource());
+					revalidate();
+					repaint();
+					marco.validate();
+				}
+			}
+		});
+		
+		bSiguiente.setBounds(462, 342, 106, 23);
+		add(bSiguiente);
+		
+		JLabel lblNewLabel = new JLabel("Nombre");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(141, 54, 46, 14);
+		add(lblNewLabel);
+		
+		tNombre = new JTextField();
+		tNombre.setBounds(210, 51, 86, 20);
+		add(tNombre);
+		tNombre.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Ubicación");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(141, 98, 46, 14);
+		add(lblNewLabel_1);
+		
+		tUbicacion = new JTextField();
+		tUbicacion.setBounds(210, 95, 86, 20);
+		add(tUbicacion);
+		tUbicacion.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Si quiere modificar un centro");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setBounds(141, 123, 324, 14);
+		add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("agregue una ubicacion ya existente");
+		lblNewLabel_3.setForeground(new Color(255, 255, 255));
+		lblNewLabel_3.setBounds(135, 148, 172, 14);
+		add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Fecha inicio");
+		lblNewLabel_4.setForeground(new Color(255, 255, 255));
+		lblNewLabel_4.setBounds(141, 183, 89, 14);
+		add(lblNewLabel_4);
+		
+		tFechaInicio = new JTextField();
+		tFechaInicio.setBounds(210, 180, 86, 20);
+		add(tFechaInicio);
+		tFechaInicio.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("Fecha fin");
+		lblNewLabel_5.setForeground(new Color(255, 255, 255));
+		lblNewLabel_5.setBounds(141, 229, 46, 14);
+		add(lblNewLabel_5);
+		
+		tFechafin = new JTextField();
+		tFechafin.setBounds(210, 226, 86, 20);
+		add(tFechafin);
+		tFechafin.setColumns(10);
+		
+		JLabel lblNewLabel_6 = new JLabel("Fuerza uno");
+		lblNewLabel_6.setForeground(new Color(255, 255, 255));
+		lblNewLabel_6.setBounds(359, 54, 68, 14);
+		add(lblNewLabel_6);
+		
+		JComboBox cbUno = new JComboBox();
+		cbUno.setBounds(421, 50, 79, 22);
+		add(cbUno);
+		
+		JLabel lblNewLabel_7 = new JLabel("Fuerza dos");
+		lblNewLabel_7.setForeground(new Color(255, 255, 255));
+		lblNewLabel_7.setBounds(359, 98, 68, 14);
+		add(lblNewLabel_7);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(421, 94, 80, 22);
+		add(comboBox);
+		
+		JLabel lblNewLabel_8 = new JLabel("Fuerza tres");
+		lblNewLabel_8.setForeground(new Color(255, 255, 255));
+		lblNewLabel_8.setBounds(359, 148, 55, 14);
+		add(lblNewLabel_8);
+		
+		JComboBox cbtres = new JComboBox();
+		cbtres.setBounds(421, 148, 80, 22);
+		add(cbtres);
+
+	}
+}

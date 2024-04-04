@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;Luchadores&apos; to &apos;Luchador&apos;&#x0D;&#x0A;- Original project: &apos;PARTE 2 - Torneo de Jean Claude Van Damme&apos;&#x0D;&#x0A;- Original element: &apos;Luchadores&apos;&#x0D;&#x0A;- Renamed element: &apos;Luchador&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Luchadores&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{Luchadores.java[Luchadores" matchStrategy="1" name="Luchador" qualified="false" references="true" similarDeclarations="false" stamp="1684172572380" textual="false" version="1.0"/>
+</session>
